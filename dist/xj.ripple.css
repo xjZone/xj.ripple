@@ -1,8 +1,22 @@
-/** xj.ripple(点击波纹特效) | V0.3.0 | Apache Licence 2.0 | 2018-2021 © XJ.Chen | https://github.com/xjZone/xj.ripple */
+/** xj.ripple(点击波纹特效) | V0.3.1 | Apache Licence 2.0 | 2018-2021 © XJ.Chen | https://github.com/xjZone/xj.ripple */
 
 /* 用于获取偏移位置的临时节点，其他计算点击位置距离容器左上角的方法，都很难兼顾到左侧的滚动条 */
 /* 所以在被点击的容器左上角生成临时节点，然后通过这个节点的 DOMRect.left / top 配合点击处计算 */
-#xj-ripple-temporary{position:absolute!important;top:0!important;left:0!important;visibility:hidden!important;overflow:hidden!important;margin:0!important;padding:0!important;width:0!important;height:0!important;border-width:0!important;opacity:0!important;transform:none!important;pointer-events:none!important;}
+#xj-ripple-temporary{
+	position:absolute!important;
+	top:0!important;
+	left:0!important;
+	visibility:hidden!important;
+	overflow:hidden!important;
+	margin:0!important;
+	padding:0!important;
+	width:0!important;
+	height:0!important;
+	border-width:0!important;
+	opacity:0!important;
+	transform:none!important;
+	pointer-events:none!important;
+}
 
 /* 加到需要波纹的标签上的类名，默认情况下不允许溢出，带 -out 后缀是能溢出，带 -mid 后缀是居中 */
 /* 带 -out-mid 后缀是允许溢出的同时还自动居中，相比起之前的版本，现在多了一个居中不溢出的方案 */
@@ -13,25 +27,35 @@
 
 /* 设置在波纹元素标签上的类名，1px * 1px 的设置，具体尺寸使用 box-shadow 生成，可以避免滚动条 */
 /* 背景色和阴影色都设置为 currentColor，这样颜色就会自动跟随所有容器的 color 设置，无需再设置 */
-.xj-ripple-exist .xj-ripple-element{position:absolute;z-index:4000;width:1px;height:1px;border-radius:50%;background-color:currentColor;color:inherit;opacity:0.375;transition:transform 500ms ease-out 0ms, opacity 500ms ease-out 125ms;transform:scale(0);pointer-events:none;will-change:transform, opacity;}
+.xj-ripple-exist .xj-ripple-element{
+	position:absolute;
+	z-index:4000;
+	width:1px;
+	height:1px;
+	border-radius:50%;
+	background-color:currentColor;
+	color:inherit;
+	opacity:0.375;
+	transition:transform 500ms ease-out 0ms, opacity 500ms ease-out 125ms;
+	transform:scale(0);
+	pointer-events:none;
+	will-change:transform, opacity;
+}
 
-/* 将会影响 currentColor 设置 */
+/* 自带的类名，通过 color 属性影响 currentColor 设置，最后让波纹呈现和设置的 color 相同的响应 */
+/* 实际上 opacity:0.375 对非黑白按钮而言太淡，但 0.5 对黑白按钮又太重，只能是有需要再单独设置 */
 .xj-ripple-exist .xj-ripple-primary .xj-ripple-element{color:#39f;}
 .xj-ripple-exist .xj-ripple-success .xj-ripple-element{color:#0c3;}
 .xj-ripple-exist .xj-ripple-warning .xj-ripple-element{color:#f93;}
 .xj-ripple-exist .xj-ripple-danger  .xj-ripple-element{color:#f33;}
 .xj-ripple-exist .xj-ripple-extra   .xj-ripple-element{color:#93f;}
 .xj-ripple-exist .xj-ripple-info    .xj-ripple-element{color:#099;}
-.xj-ripple-exist .xj-ripple-white   .xj-ripple-element{color:#fff;}
 .xj-ripple-exist .xj-ripple-black   .xj-ripple-element{color:#333;}
+.xj-ripple-exist .xj-ripple-white   .xj-ripple-element{color:#fff;}
 
-/* 确保 disabled 状态下不显示 */
-/* 
-不能设置，否则父元素设置了 xj-ripple-disabled 类名
-但子元素设置 forbid = false 就响应却不能显示出来了
-.xj-ripple-exist .xj-ripple-disabled .xj-ripple-element{
-	display:none!important;
-}
-*/
+/* 确保 disabled 下不显示 ripple 波纹 */
+/* 不行的，当父元素设置了 xj-ripple-disabled 类名 */
+/* 但子元素设置 forbid = false 时就该响应，这句会导致不能显示的 */
+/* .xj-ripple-exist .xj-ripple-disabled .xj-ripple-element{display:none!important;} */
 
 

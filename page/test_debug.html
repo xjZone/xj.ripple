@@ -1,0 +1,583 @@
+<!doctype html>
+<html lang="zh-cmn-hans">
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+<meta name="viewport" xj-viewport="{minWidth:400, }" content="width=device-width,initial-scale=1" />
+<script src="https://cdn.jsdelivr.net/gh/xjZone/xj.viewport@0.3.1/dist/xj.viewport.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+
+<link id="prism-material-light" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-themes@1.7.0/themes/prism-material-light.css" />
+<link id="prism-okaidia" rel="alternate stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism-okaidia.css" />
+<script data-manual="prevent prismjs auto highlighted" src="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/prism.js"></script>
+
+<link rel="stylesheet" href="../static/plugin/xjDemo/0.1.0/dist/xjDemo.css" />
+<script src="../static/plugin/xjDemo/0.1.0/dist/xjDemo.js"></script>
+
+<!--◇
+<link rel="stylesheet" href="../dist/xj.ripple.css" />
+<script src="../dist/xj.ripple.js"></script>
+◇-->
+
+<title>xj.ripple debug</title>
+</head>
+<body style="font:16px/1.5 Iosevka,'Microsoft YaHei','Hiragino Sans GB';box-sizing:border-box;max-width:1024px;margin:0;padding:0 16px;">
+<style>@font-face{font-family:"Iosevka";src:local('Iosevka'), url("../static/font/iosevka/6.1.2/iosevka-fixed-regular.woff2") format("woff2"), url("../static/font/iosevka/6.1.2/iosevka-fixed-regular.woff") format("woff");}</style>
+
+
+
+<h1>xj.ripple debug</h1>
+<hr />
+
+
+
+<section>
+<h2>插件备注</h2>
+<p>V0.3.0 增加了对目标节点的 cursor 样式判断，如果样式值为 not-allowed 那么点击的时候也不会响应波纹的效果，免去手动操作的麻烦。</p>
+<p>V0.3.1 增加了 ignoreSelector 全局配置参数，用于排除一些不支持插入子元素生成波纹的单标签如 input 以及一些 shadow-dom 的元素。</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>容器样式</h2>
+<p>为了展示波纹效果，所以设置了 .box 类名选择器定义容器样式，这只是为了方便查看效果，其实响应波纹只需要添加 .xj-ripple 就够了。</p>
+
+<textarea class="xjDemo" xjDemo="{}">
+<style>
+.box{display:inline-block;
+padding:4px;min-width:64px;min-height:64px;
+border:1px solid #ccc;vertical-align:top;box-sizing:border-box;}
+</style>
+<span class="box xj-ripple">.box<br />.xj-ripple</span>
+</textarea>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>基础类名</h2>
+<p>插件共设置了 4 个响应波纹的基础类名，.xj-ripple 不允许波纹溢出，.xj-ripple-out 允许波纹溢出，.xj-ripple-mid 不允许波纹溢出且波纹将自动水平垂直居中，.xj-ripple-out-mid 类名则是允许波纹溢出且波纹会自动居中，当然也可以在全局配置中添加更多的基础类名。</p>
+
+<p>
+	<span class="box xj-ripple">			xj-ripple			</span>
+	<span class="box xj-ripple-out">		xj-ripple-out		</span>
+	<span class="box xj-ripple-mid">		xj-ripple-mid		</span>
+	<span class="box xj-ripple-out-mid">	xj-ripple-out-mid	</span>
+</p>
+
+<h2>委托绑定</h2>
+<p>检测委托绑定的响应，由于绑定的相关事件是采用了捕获的形式进行绑定，所以并不需要担心 event.target 会是其他的标签，捕获时顺序从上到下，肯定会先捕获到第一个 .xj-ripple* 类名的标签，而不是捕获到其他子元素，总而言之，即使点击的是目标的子元素也可以响应。</p>
+
+<p>
+	<span class="box xj-ripple">			xj-ripple			<br /><span class="box">click</span></span>
+	<span class="box xj-ripple-out">		xj-ripple-out		<br /><span class="box">click</span></span>
+	<span class="box xj-ripple-mid">		xj-ripple-mid		<br /><span class="box">click</span></span>
+	<span class="box xj-ripple-out-mid">	xj-ripple-out-mid	<br /><span class="box">click</span></span>
+</p>
+
+<h2>标签嵌套</h2>
+<p>由于事件是使用了捕获的形式进行绑定，事件将从上到下进行，所以事件并不会重复触发，也就是说标签嵌套也没问题，即使 .xj-ripple* 的元素中又嵌套了 .xj-ripple* 元素，也不会相互起冲突，在哪里点击就会在那个容器中响应波纹，也就是事件总会在最近那个容器响应。</p>
+
+<p>
+	<span class="box xj-ripple">			xj-ripple			<br /><span class="box xj-ripple">			xj-<br />ripple			</span></span>
+	<span class="box xj-ripple-out">		xj-ripple-out		<br /><span class="box xj-ripple-out">		xj-<br />ripple-out		</span></span>
+	<span class="box xj-ripple-mid">		xj-ripple-mid		<br /><span class="box xj-ripple-mid">		xj-<br />ripple-mid		</span></span>
+	<span class="box xj-ripple-out-mid">	xj-ripple-out-mid	<br /><span class="box xj-ripple-out-mid">	xj-<br />ripple-out-mid	</span></span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>debug : false, append : true, mouse : [0]</h2>
+<p>波纹执行后，ripple 节点和 offset 节点会被自动移除，如果该 debug 参数被设置为 true，则这两个节点都不会被自动移除，方便测试，ripple 节点和 offset 节点默认都会被添加到目标容器的最后面，如果该 append 参数被设置为 false，则节点会被添加到容器的最前面，插件默认情况下只会响应鼠标左键，如果想在点击中键和右键时也生成波纹，可将 1, 2 添加进该参数中，该参数对 touch 触屏设备无效。</p>
+
+<p>
+	<span class="box xj-ripple" xj-ripple="{debug:true }">		debug:true						</span>
+</p>
+<p>
+	<span class="box xj-ripple" xj-ripple="{append:true}">		append:true						</span>
+	<span class="box xj-ripple" xj-ripple="{append:false}">		append:false					</span>
+</p>
+<p>
+	<span class="box xj-ripple" xj-ripple="{mouse:[0]}">		mouse:[0]<br />只响应左键		</span>
+	<span class="box xj-ripple" xj-ripple="{mouse:[0,1]}">		mouse:[0,1]<br />响应左键中键	</span>
+	<span class="box xj-ripple" xj-ripple="{mouse:[0,1,2]}">	mouse:[0,1,2]<br />响应左中右键	</span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>forbid : true // 自动判断禁止响应</h2>
+<p>当标签设置了 disabled 属性或 .xj-ripple-disabled 类名或 cursor:not-allowed; 样式，标签被点击将不会响应波纹，当标签的上层标签有这些设置时，标签被点击也不会响应波纹，但如果 forbid 被设置为 false，则标签的上层标签有这些设置，子标签不受影响，还是会响应的，唯一例外的是 cursor:not-allowed 属性，这个属性会自动被子元素继承，所以即使设置了 forbid : false，子元素依旧不响应波纹。</p>
+
+<p>
+	<span class="box xj-ripple" disabled="disabled">			设置了 <br />disabled 属性					</span>
+	<span class="box xj-ripple xj-ripple-disabled">				设置了 <br />.xj-ripple-disabled			</span>
+	<span class="box xj-ripple" style="cursor:not-allowed;">	设置了 <br />cursor:not-allowed 指针样式	</span>
+</p>
+<p>
+	<span class="box" disabled="disabled">						<span class="box xj-ripple">父元素设置了 <br />disabled 属性<br />所以子元素不响应					</span></span>
+	<span class="box xj-ripple-disabled">						<span class="box xj-ripple">父元素设置了 <br />.xj-ripple-disabled<br />所以子元素不响应			</span></span>
+	<span class="box" style="cursor:not-allowed;">				<span class="box xj-ripple">父元素设置了 <br />cursor:not-allowed 指针样式<br />所以子元素不响应	</span></span>
+</p>
+<p>
+	<span class="box" disabled="disabled">						<span class="box xj-ripple" xj-ripple="{forbid:false}">父元素虽然被设置了 <br />disabled 属性<br />子元素 forbid = false<br />所以不受影响，可以响应						</span></span>
+	<span class="box xj-ripple-disabled">						<span class="box xj-ripple" xj-ripple="{forbid:false}">父元素虽然被设置了 <br />.xj-ripple-disabled<br />子元素 forbid = false<br />所以不受影响，可以响应					</span></span>
+	<span class="box" style="cursor:not-allowed;">				<span class="box xj-ripple" xj-ripple="{forbid:false}">父元素设置了 <br />cursor:not-allowed 指针样式<br />子元素总会受到影响而无法响应<br />因为 cursor 样式是自动继承的	</span></span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>inherit : true // 继承设置</h2>
+<p>设置了波纹的标签，可通过为标签或标签的父级标签设置内联的 xj-ripple="{}" 属性来设置波纹的各种参数，而 inherit 参数是用于控制这个内联属性是否要实现继承，默认为 true，也就是会自动继承，当标签和标签的父级标签都设置了该参数时，层级越低的标签属性权重就越高，这种内联属性的继承，最大的好处是如果想为某个区域的波纹设置特殊参数，不需要逐个标签设置，只需要设置父容器然后继承即可。</p>
+
+<p>
+	<span class="box xj-ripple" xj-ripple="{opacity:'0.75'}">opacity:'0.75'</span>
+</p>
+<p>
+	<span class="box" xj-ripple="{opacity:'0.75'}">opacity:'0.75'<br />
+		<span class="box xj-ripple" xj-ripple="{radius:'0%', color:'red'}">radius:'0%', color:'red'</span>
+	</span>
+</p>
+<p>
+	<span class="box" xj-ripple="{opacity:'0.75'}">opacity:'0.75'<br />
+		<span class="box" xj-ripple="{radius:'0%'}">radius:'0%'<br />
+			<span class="box xj-ripple" xj-ripple="{color:'red'}">color:'red'<br />属性继承</span>
+			<span class="box xj-ripple" xj-ripple="{radius:'50%'}">radius:'50%'<br />继承被覆盖</span>
+			<span class="box xj-ripple" xj-ripple="{inherit:false}">inherit:false<br />不继承的情况</span>
+		</span>
+	</span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>nodeName : 'xj-ripple'</h2>
+<p>该参数用于设置波纹节点的标签名称，默认为 'xj-ripple'，这里之所以使用自定义的标签名称，是因为如果用 span 或 div 可能会被其他标签选择器误选，导致波纹样式受到其他样式的干扰，在下面的例子中，为了方便查看波纹节点的标签名称，我们还特意设置了 debug:true 参数，这样节点就不会自动移除，方便检测，关于自定义标签名称的更多内容，可以参考 https://zh.javascript.info/custom-elements。</p>
+
+<p><span class="box xj-ripple" xj-ripple="{debug:true, nodeName:'i'}">debug:true<br />nodeName:'i'</span></p>
+<p><span class="box xj-ripple" xj-ripple="{debug:true, nodeName:'xj-ripple'}">debug:true<br />nodeName:'xj-ripple'</span></p>
+<p><span class="box xj-ripple" xj-ripple="{debug:true, nodeName:'custom-node-name'}">debug:true<br />nodeName:'custom-node-name'</span></p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>classString : ''</h2>
+<p>
+	<span class="box xj-ripple" xj-ripple="{debug:true}">									debug:true<br />default							</span>
+	<span class="box xj-ripple" xj-ripple="{debug:true, classString:'testClass'}">			debug:true<br />classString:'testClass'			</span>
+</p>
+
+<h2>styleString : ''</h2>
+<p>
+	<span class="box xj-ripple" xj-ripple="{debug:true}">									debug:true<br />default							</span>
+	<span class="box xj-ripple" xj-ripple="{debug:true, styleString:'font-size:16px;'}">	debug:true<br />styleString:'font-size:16px;'	</span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>opacity : '0.375'</h2>
+<p>
+	<span class="box xj-ripple">								default				</span>
+	<span class="box xj-ripple" xj-ripple="{opacity:'1'}">		opacity:'1'			</span>
+</p>
+
+<h2>radius : '50%'</h2>
+<p>
+	<span class="box xj-ripple">								default				</span>
+	<span class="box xj-ripple" xj-ripple="{radius:'0%'}">		radius:'0%'			</span>
+</p>
+
+<h2>color : 'currentColor'</h2>
+<p>
+	<span class="box xj-ripple">								default				</span>
+	<span class="box xj-ripple" xj-ripple="{color:'red'}">		color:'red'			</span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>height : 'auto' / width : 'auto'</h2>
+<p>
+	<span class="box xj-ripple-out" xj-ripple="{width:'50px',height:'50px'}">width:'50px',<br />height:'50px'</span>
+	<span class="box xj-ripple-out" xj-ripple="{width:'50%', height:'50%' }">width:'50%', <br />height:'50%' </span>
+</p>
+
+<h2>minWidth : '0px' / minHeight : '0px'</h2>
+<p>
+	<span class="box xj-ripple-out" xj-ripple="{minWidth:'200px',minHeight:'200px'}">minWidth:'200px',<br />minHeight:'200px'</span>
+	<span class="box xj-ripple-out" xj-ripple="{minWidth:'200%', minHeight:'200%' }">minWidth:'200%', <br />minHeight:'200%' </span>
+</p>
+
+<h2>maxWidth : 'none' / maxHeight : 'none'</h2>
+<p>
+	<span class="box xj-ripple-out" xj-ripple="{maxWidth:'50px',maxHeight:'50px'}">maxWidth:'50px',<br />maxHeight:'50px'</span>
+	<span class="box xj-ripple-out" xj-ripple="{maxWidth:'50%', maxHeight:'50%' }">maxWidth:'50%', <br />maxHeight:'50%' </span>
+</p>
+
+<h2>extraWidth : '0px' / extraHeight : '0px'</h2>
+<p>
+	<span class="box xj-ripple-out" xj-ripple="{width:'50px',height:'50px',extraWidth:'50px',extraHeight:'50px'}">width:'50px'<br />height:'50px'<br />extraWidth:'50px'<br />extraHeight:'50px'</span>
+	<span class="box xj-ripple-out" xj-ripple="{width:'50%', height:'50%', extraWidth:'50%', extraHeight:'50%' }">width:'50%' <br />height:'50%' <br />extraWidth:'50%' <br />extraHeight:'50%' </span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>left : 'auto' / top : 'auto'</h2>
+<p>
+	<span class="box xj-ripple-out" xj-ripple="{left:'0px',top:'0px'}">left:'0px',<br />top:'0px'</span>
+	<span class="box xj-ripple-out" xj-ripple="{left:'50%',top:'50%'}">left:'50%',<br />top:'50%'</span>
+</p>
+
+<h2>offsetLeft : '0px' / offsetTop : '0px'</h2>
+<p>
+	<span class="box xj-ripple-out" xj-ripple="{left:'0px',top:'0px',offsetLeft:'5px',offsetTop:'5px'}">left:'0px'<br />top:'0px'<br />offsetLeft:'5px'<br />offsetTop:'5px'</span>
+	<span class="box xj-ripple-out" xj-ripple="{left:'50%',top:'50%',offsetLeft:'50%',offsetTop:'50%'}">left:'50%'<br />top:'50%'<br />offsetLeft:'50%'<br />offsetTop:'50%'</span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>
+	transitionProperty : 'transform, opacity'<br />
+	transitionDuration : '500ms'<br />
+	transitionTimingFunction : 'ease-out'<br />
+	transitionDelay : '0ms, 125ms'<br />
+</h2>
+
+<p>
+	<span class="box xj-ripple" xj-ripple="{debug:true}">
+		debug:true<br />
+		default<br />
+	</span>
+</p>
+
+<p>
+	<span class="box xj-ripple" xj-ripple="{debug:true,
+		transitionProperty:'opacity, transform',
+		transitionDuration:'250ms',
+		transitionTimingFunction:'ease',
+		transitionDelay:'0ms'
+	}">
+		debug:true<br />
+		transitionProperty:'opacity, transform'<br />
+		transitionDuration:'250ms'<br />
+		transitionTimingFunction:'ease'<br />
+		transitionDelay:'0ms'<br />
+	</span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>createBefore = 'function(){}'</h2>
+<p><span class="box xj-ripple" xj-ripple="{createBefore:function(event,element){ console.log(event,element) }}">{createBefore:<br />function(event,element){ console.log(event,element) }}</span></p>
+
+<h2>createAfter = 'function(){}'</h2>
+<p><span class="box xj-ripple" xj-ripple="{createAfter:function(event,element){ console.log(event,element) }}">{createAfter:<br />function(event,element){ console.log(event,element) }}</span></p>
+
+<h2>removeCallback = 'function(){}'</h2>
+<p><span class="box xj-ripple" xj-ripple="{removeCallback:function(event,element){ console.log(event,element) }}">{removeCallback:<br />function(event,element){ console.log(event,element) }}</span></p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>specialRatio : 1.5</h2>
+<p>specialRatio 参数用于设置 .xj-ripple-mid 模式和 .xj-ripple-out-mid 模式下波纹的直径，参数默认值是容器最长那条边的 1.5 倍，一般来讲都是能覆盖到整个容器的(但是不含 border)，下例为了方便观察，使用 .xj-ripple-out-mid 类名，波纹将会允许溢出且自动居中。</p>
+
+<p>
+	<span class="box xj-ripple-out-mid">								default			</span>
+	<span class="box xj-ripple-out-mid" xj-ripple="{specialRatio:1}">	specialRatio:1	</span>
+	<span class="box xj-ripple-out-mid" xj-ripple="{specialRatio:2}">	specialRatio:2	</span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>insertTarget = 'auto'</h2>
+<p>如果 insertTarget 不为 'auto'，那么在没设置 left / top 或 offsetLeft / offsetTop 参数时，波纹圆心会在容器中间，波纹参数只会在触发点击的那个节点上获取，与目标容器没关系，目标容器需要做的，就是设置 position 不为 static，以此确保波纹能实现绝对定位。</p>
+
+<p>
+	<span class="box xj-ripple" xj-ripple="{insertTarget:'self i'}">
+		span[class="box xj-ripple"]<br />[xj-ripple="{insertTarget:'self i'}"]<br />
+		<i class="box" style="position:relative;overflow:hidden;">波纹将在这里响应<br />position:relative;<br />overflow:hidden;</i>
+	</span>
+	<span class="box xj-ripple-out-mid" xj-ripple="{insertTarget:'self i'}">
+		span[class="box xj-ripple-out-mid"]<br />[xj-ripple="{insertTarget:'self i'}"]<br />
+		<i class="box" style="position:relative;overflow:visible;">波纹将在这里响应<br />position:relative;<br />overflow:visible;</i>
+	</span>
+</p>
+
+<p>
+	<span class="box">parent<br />
+		<span class="box xj-ripple" xj-ripple="{insertTarget:'parent i'}">
+			span[class="box xj-ripple"]<br />[xj-ripple="{insertTarget:'parent i'}"]<br />
+			<i class="box" style="position:relative;overflow:hidden;">波纹将在这里响应<br />position:relative;<br />overflow:hidden;</i>
+		</span>
+	</span>
+	<span class="box">parent<br />
+		<span class="box xj-ripple-out-mid" xj-ripple="{insertTarget:'parent i'}">
+			span[class="box xj-ripple-out-mid"]<br />[xj-ripple="{insertTarget:'parent i'}"]<br />
+			<i class="box" style="position:relative;overflow:visible;">波纹将在这里响应<br />position:relative;<br />overflow:visible;</i>
+		</span>
+	</span>
+</p>
+
+<p>
+	<span class="box xj-ripple" xj-ripple="{insertTarget:'#insertTag01'}">
+		span[class="box xj-ripple"]<br />[xj-ripple="{insertTarget:'#insertTag01'}"]<br />
+		<i class="box" id="insertTag01" style="position:relative;overflow:hidden;">波纹将在这里响应<br />#insertTag01<br /> </i>
+	</span>
+	<span class="box xj-ripple-out-mid" xj-ripple="{insertTarget:'#insertTag02'}">
+		span[class="box xj-ripple-out-mid"]<br />[xj-ripple="{insertTarget:'#insertTag02'}"]<br />
+		<i class="box" id="insertTag02" style="position:relative;">波纹将在这里响应<br />#insertTag02</i>
+	</span>
+</p>
+
+<p>
+	<span class="box xj-ripple" xj-ripple="{insertTarget:function(target){ return target.querySelector('i') }}">
+		span[class="box xj-ripple"]<br />
+		[xj-ripple="{insertTarget:function(tar<br />
+		get){ return target.querySelector('i'); }, }"]<br />
+		<i class="box" style="position:relative;">i</i><b class="box" style="position:relative;">b</b>
+	</span>
+	<span class="box xj-ripple" xj-ripple="{insertTarget:function(target){ return target.querySelector('b') }}">
+		span[class="box xj-ripple"]<br />
+		[xj-ripple="{insertTarget:function(tar<br />
+		get){ return target.querySelector('b'); }, }"]<br />
+		<i class="box" style="position:relative;">i</i><b class="box" style="position:relative;">b</b>
+	</span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>xj.ripple.create()</h2>
+<p>在全局中的 xj.ripple 对象上只有一个方法，就是 create() 方法，这个方法用于手动创建波纹，它可以接受 target 和 option 这两个参数，target 是波纹要插入的目标节点，option 则是波纹的参数对象，要注意目标容器的 position 不能是 static，否则波纹将无法定位。</p>
+
+<p><button type="button" onclick="xj.ripple.create(document.getElementById('span01'), {debug:true});">点击创建波纹</button></p>
+<p><span id="span01" class="box" style="position:relative;"></span></p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>单标签元素</h2>
+<p>单标签元素如 img 或 input，由于支持子标签，所以无法在这类标签中实现波纹的效果，另外就是 audio 和 video 等特殊标签也不支持普通的子元素，所以也无法实现波纹，但是非要实现这个效果，也可以将单标签嵌在一个双标签之中(例如 div)，然后将类名添加在 div 上。</p>
+
+<p>
+	无嵌套的情况：<br />
+	<input class="xj-ripple-mid" style="display:inline-block;" type="button" value="input[type=&quot;button&quot;]" />
+</p>
+
+<p>
+	嵌套了的情况：<br />
+	<span class="xj-ripple-mid" style="display:inline-block;" >
+		<input style="display:inline-block;" type="button" value="input[type=&quot;button&quot;]" />
+	</span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>存在边框和边距的元素</h2>
+<p>当滚动条在左上角时，只有靠 offsetNode 的 DOMRect 才能准确的获取到容器的左上角位置，发现当滚动条在左侧时，IE11/18 会出现波纹漂移的情况，不知道是否为虚拟系统的 BUG，一般波纹不会在有滚动条的容器中使用且滚动条在左侧的情况很少见，所以这 BUG 暂时搁置。</p>
+
+<div style="display:inline-block;border:1px solid #ccc;vertical-align:top;">
+	<div id="div01" style="position:relative;border:10px solid #ccc;margin:10px;padding:10px;overflow-y:scroll;direction:rtl;unicode-bidi:bidi-override;" class="xj-ripple" xj-ripple="{width:'32px',height:'32px',debug:true}">
+		<div id="div02" style="position:relative;border:10px solid #ccc;margin:10px;padding:10px;overflow-y:scroll;direction:rtl;unicode-bidi:bidi-override;" class="xj-ripple" xj-ripple="{width:'32px',height:'32px',debug:true}">
+			<div id="div03" style="position:relative;border:10px solid #ccc;margin:10px;padding:10px;overflow-y:scroll;direction:rtl;unicode-bidi:bidi-override;" class="xj-ripple" xj-ripple="{width:'32px',height:'32px',debug:true}">
+				click
+			</div>
+		</div>
+	</div>
+</div>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>xj.ripple 不支持在 svg 标签上使用</h2>
+<p>svg 标签无法容纳普通的标签作为子元素，强行设置也不行的，所以 ripple 也无法在 svg 标签中使用，就算用 createElementNS() 方法创建 svg 的 circle 标签，circle 的定位和阴影等样式也难以设置，它们采用的规则和普通的标签还是有区别，所以这功能只能暂时搁置了。</p>
+
+<svg class="xj-ripple" xj-ripple="{debug:true}" style="width:100%;max-width:600px;height:200px;border:1px solid #ccc;"></svg>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>在一个节点上同时触发多个 touch 事件响应波纹</h2>
+<p>V0.2.4 开始支持在移动端多点触屏的情况下同时响应多个波纹效果，不管多点触屏的是否为同个元素都可以成功的响应，但响应波纹的大前提是没有在 touchend 事件之前触发 touchmove 事件，一旦触发了 touchmove 事件，则 touchend 事件将不被视为点击，波纹也就不响应。</p>
+
+<div class="xj-ripple" style="width:100%;height:200px;border:1px solid #ccc;"></div>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>预设值的颜色</h2>
+<p>波纹颜色由 background-color 和 box-shadow 这两个样式决定，但它们的值其实都是 currentColor，也就是说，波纹的颜色其实最终是取决于 color 样式的设置，所以在默认的情况下，波纹的颜色和文本的颜色相同，插件还在 xj.ripple.css 文件中预设置了以下 8 种颜色。</p>
+
+<p>
+	<span class="box xj-ripple xj-ripple-primary">	xj-ripple<br />xj-ripple-primary	</span>
+	<span class="box xj-ripple xj-ripple-success">	xj-ripple<br />xj-ripple-success	</span>
+	<span class="box xj-ripple xj-ripple-warning">	xj-ripple<br />xj-ripple-warning	</span>
+	<span class="box xj-ripple xj-ripple-danger">	xj-ripple<br />xj-ripple-danger		</span>
+</p>
+
+<p>
+	<span class="box xj-ripple xj-ripple-extra">	xj-ripple<br />xj-ripple-extra		</span>
+	<span class="box xj-ripple xj-ripple-info">		xj-ripple<br />xj-ripple-info		</span>
+	<span class="box xj-ripple xj-ripple-white">	xj-ripple<br />xj-ripple-white		</span>
+	<span class="box xj-ripple xj-ripple-black">	xj-ripple<br />xj-ripple-black		</span>
+</p>
+
+<hr />
+</section>
+
+
+
+<section>
+<h2>配合按钮使用</h2>
+<p>当按钮使用了 xj-ripple 的效果时，按钮的相关样式设置可以参考本文件的写法，鼠标在 hover 状态下调整背景色，rgb 的值各自减去 f(16)，并且有 xj-ripple 的效果，就不再需要为按钮设置 :active{} 伪类样式了，以后按钮伪类的设置可参考下面这个 style 里的写法。</p>
+
+<textarea class="xjDemo" xjDemo="{sourceShow:false,}">
+<style>
+/* styleContent */
+/* 按钮阴影涉及到层级和聚焦等问题，并且就逻辑上来讲悬停改变层级也不大对，还是得选择使用悬停改变背景色的传统做法 */
+/* .button:hover{box-shadow:0 2px 4px rgba(0,0,0,0.5), 0 4px 8px rgba(0,0,0,0.25);} */
+/* .button:active{box-shadow:0 0 0 transparent;} */
+
+.button{display:inline-block;padding:0 12px;height:40px;border:1px solid #ccc;border-radius:4px;vertical-align:middle;
+line-height:38px;cursor:pointer;transition:background-color 250ms,box-shadow 250ms;-webkit-appearance:none;}
+
+.button-primary{border-color:transparent;background-color:#39f;color:#fff;}
+.button-success{border-color:transparent;background-color:#0c3;color:#fff;}
+.button-warning{border-color:transparent;background-color:#f93;color:#fff;}
+.button-danger {border-color:transparent;background-color:#f33;color:#fff;}
+.button-extra  {border-color:transparent;background-color:#93f;color:#fff;}
+.button-info   {border-color:transparent;background-color:#099;color:#fff;}
+
+html:not(.xj-operate-touch) .button:hover        {background-color:#f0f0f0;}
+html:not(.xj-operate-touch) .button-primary:hover{background-color:#248af0;}
+html:not(.xj-operate-touch) .button-success:hover{background-color:#00bd24;}
+html:not(.xj-operate-touch) .button-warning:hover{background-color:#f08a24;}
+html:not(.xj-operate-touch) .button-danger:hover {background-color:#f02424;}
+html:not(.xj-operate-touch) .button-extra:hover  {background-color:#8a24f0;}
+html:not(.xj-operate-touch) .button-info:hover   {background-color:#008a8a;}
+</style>
+
+<p>
+	<span class="button xj-ripple">					button	</span>
+	<span class="button button-primary xj-ripple">	button	</span>
+</p>
+
+<p>
+	<span class="button button-success xj-ripple">	button	</span>
+	<span class="button button-warning xj-ripple">	button	</span>
+	<span class="button button-danger xj-ripple">	button	</span>
+</p>
+
+<p>
+	<span class="button button-extra xj-ripple">	button	</span>
+	<span class="button button-info xj-ripple">		button	</span>
+</p>
+</textarea>
+
+<hr />
+</section>
+
+
+
+<script>
+// 没使用 requirejs 或者 seajs 进行模块化处理时，可用全局中的 xj.ripple 对象，否则是 require(['xj.ripple'], function(xs){ console.log(xs) }) 这样了
+// 可在引入插件前，通过 xj.rippleOption['0.3.1'] 进行全局配置，通过 xj.rippleConfig['0.3.1'] 进行参数预设，注意中括号后的版本号要和当前插件版本相同
+// if(window.xj === undefined){ xj = {} };
+// if(xj.rippleConfig === undefined){ xj.rippleConfig = {} };
+// if(xj.rippleOption === undefined){ xj.rippleOption = {} };
+// xj.rippleConfig['0.3.1'] = { ignoreSelector : 'img, input, textarea, select, area, audio, video', };
+// xj.rippleOption['0.3.1'] = { debug : true, append:false, mouse : [0,1,2], nodeName : 'xj-ripple-custom', classString : '', styleString : '', };
+</script>
+
+<script>document.write('<link rel="stylesheet" href="../dist/xj.ripple.css?timeStamp='+ Date.now() +'" />')</script>
+<script>document.write('<script src="../dist/xj.ripple.js?timeStamp='+ Date.now() +'"><\/script>')</script>
+<script>
+// 没使用 requirejs 或 seajs 进行模块化时，可以使用全局中的 xj.ripple 对象
+// 否则就是 require(['xj.ripple'], function(xr){ console.log(xr) }) 这样了
+console.log(xj.ripple);
+
+// create() 方法的两个参数分别是 target, options，前者为波纹所在元素节点，后者为波纹参数设置对象
+// 以这种方式创建出来的波纹，默认圆心位置是目标节点的中心点，目标节点得不是 position:static 才行
+// {
+// 	version : '0.3.1',			// 当前插件和配置的版本号
+// 	create : function(){},		// 传入节点和参数生成波纹
+// }
+</script>
+
+
+
+</body>
+</html>
+
+
