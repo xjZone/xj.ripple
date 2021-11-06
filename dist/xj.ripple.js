@@ -1,4 +1,4 @@
-/** xj.ripple(点击波纹特效) | V0.3.1 | Apache Licence 2.0 | 2018-2021 © XJ.Chen | https://github.com/xjZone/xj.ripple */
+/** xj.ripple(点击波纹特效) | V0.3.2 | Apache Licence 2.0 | 2018-2021 © XJ.Chen | https://github.com/xjZone/xj.ripple */
 ;(function(global, factory){
 	if(typeof(define) === 'function' && (define.amd !== undefined || define.cmd !== undefined)){ define(factory) }
 	else if(typeof(module) !== 'undefined' && typeof(exports) === 'object'){ module.exports = factory() }
@@ -22,7 +22,7 @@ var pub_hasClass,pub_addClass,pub_delClass;!function(){pub_hasClass=function(a,b
 var pub_global = (typeof(globalThis) !== 'undefined' ? globalThis : typeof(window) !== 'undefined' ? window : typeof(self) !== 'undefined' ? self : global);
 
 // public nothing, version, keyword
-var pub_nothing = function(){}, pub_version = '0.3.1', pub_keyword = 'ripple';
+var pub_nothing = function(){}, pub_version = '0.3.2', pub_keyword = 'ripple';
 
 // public config, advance set
 var pub_config = {
@@ -37,16 +37,16 @@ var pub_config = {
 	// '.xj-ripple' 与 '.xj-ripple-out' 的区别在于，前者的波纹不会溢出，而后者的波纹会溢出，溢出只用于测试，正式环境中很少会用到该效果
 	// 如果希望某些元素，例如 button，默认就带波纹效果，可以将 'button' 添加到这个分组选择器中，这样就不需要对每个 button 都设置类名了
 	// 当然你得为 button 标签设置 position:relative; 或 position:absolute;，否则波纹无法相对定位，而 overflow:hidden; 设置则不是必须的
-	defaultSelector : '.xj-ripple, .xj-ripple-out',
+	defaultSelector : '.xj-ripple, .xj-ripple-out, button, .button, .xjButton',
 	
 	// specialSelector 参数和 defaultSelector 参数类似，但产生的波纹将会水平垂直居中定位，默认值是 '.xj-ripple-mid,.xj-ripple-out-mid'
 	// '.xj-ripple-mid' 与 '.xj-ripple-out-mid' 的区别在于，前者的波纹不会溢出而后者的波纹会溢出，也就是有没有 overflow:hidden; 的区别
 	// 希望某元素自带这种波纹，也可以将选择器以分组选择器的形式追加到参数中，注意该元素不能是 position:static;，否则波纹将无法准确定位
-	specialSelector : '.xj-ripple-mid, .xj-ripple-out-mid',
-		
+	specialSelector : '.xj-ripple-mid, .xj-ripple-out-mid, .xjRadio-icon, .xjCheckbox-icon, .xjSwitch-icon',
+	
 	// img 和 input 等单标签元素无法被插入子标签，audio 和 video 等特殊元素也不支持插入子标签，ripple 波纹的效果也无法在这类标签上显示
-	// 符合该参数中的选择器的标签都不会响应波纹效果，默认值是 'img, input, textarea, select, area, audio, video'，有其他需求可自行添加
-	ignoreSelector : 'img, input, textarea, select, area, audio, video',
+	// 符合参数选择器的标签都不会响应 ripple，默认值是 'img, input, textarea, select, area, audio, video, track'，有其他需求可自行添加
+	ignoreSelector : 'img, input, textarea, select, area, audio, video, track',
 	
 };
 
@@ -249,6 +249,10 @@ var createRipple = function(event, target, special, options){
 	// 0.3.1 在全局配置中新增了这个 ignoreSelector 参数，用来避免响应单标签以及 audio 等特殊标签
 	// 单标签和 audio 等标签不支持插入子元素，直接不响应更好，免得还得用 .button:not(input) 写法
 	if(target.matches(pub_config.ignoreSelector) === true){ return };
+	
+	// 0.3.2 将会自动响应符合 'button, .button' 选择器的标签，这样就不需要在全局配置中再进行设置
+	// 但响应后如果标签的 position 是 static，则波纹定位会不准，所以得排除 position:static; 情况
+	if(pub_win.getComputedStyle(target).position === 'static'){ return };
 	
 	// createRipple 函数在执行之前已经检测 target 不是 disabled 状态，之后应该检测上层节点的状态
 	// 判断 target 节点的上级元素是否处于 disabled 状态，是否有 disabled 类名或 not-allowed 设置

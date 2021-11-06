@@ -1,4 +1,4 @@
-/** xj.ripple(点击波纹特效) | V0.3.1 | Apache Licence 2.0 | 2018-2021 © XJ.Chen | https://github.com/xjZone/xj.ripple */
+/** xj.ripple(点击波纹特效) | V0.3.2 | Apache Licence 2.0 | 2018-2021 © XJ.Chen | https://github.com/xjZone/xj.ripple */
 
 /* 用于获取偏移位置的临时节点，其他计算点击位置距离容器左上角的方法，都很难兼顾到左侧的滚动条 */
 /* 所以在被点击的容器左上角生成临时节点，然后通过这个节点的 DOMRect.left / top 配合点击处计算 */

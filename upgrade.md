@@ -6,6 +6,10 @@
 <!-- --------------------------------------------------------------------------------------- -->
 ## V0.3.X
 
+**V0.3.2(2021-11-06)**  
+为 defaultSelector 参数添加 'button, .button, .xjButton'，为 specialSelector 参数添加 .xjChecked 相关的选择器  
+现在由于 button 会自动响应波纹，但 position:static 的按钮波纹会定位异常，所以不响应 position 是 static 的情况
+
 **V0.3.1(2021-10-17)**  
 将全局配置的 defaultClass 和 specialClass 改名为 defaultSelector 和 specialSelector，因为实际上并不止支持类名  
 全局配置增加 ignoreSelector 参数，用于排除一些不支持 ripple 的单标签以及 shadow-dom 元素  
