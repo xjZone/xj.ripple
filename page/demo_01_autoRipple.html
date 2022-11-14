@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>demo_01_autoRipple</title>
+</head>
+<body>
+
+
+
+<script>
+// 在引入插件前进行全局配置，[] 括号里的值得和插件版本相同
+// 符合 defaultSelector 选择器的节点，可在点击位置响应波纹
+// 将 button 追加到分组选择器中，button 就能自动响应波纹了
+if(window.xj === undefined){ xj = {} };
+if(xj.rippleConfig === undefined){ xj.rippleConfig = {} };
+xj.rippleConfig['0.4.0'] = { defaultSelector : '.xj-ripple, .xj-ripple-out, button', };
+</script>
+<script>document.write('<link rel="stylesheet" href="../dist/xj.ripple.css?timeStamp='+ Date.now() +'" />')</script>
+<script>document.write('<script src="../dist/xj.ripple.js?timeStamp='+ Date.now() +'"><\/script>')</script>
+
+<style>button{position:relative;overflow:hidden;}</style>
+<button type="button">button</button>
+
+
+
+</body>
+</html>
+
+

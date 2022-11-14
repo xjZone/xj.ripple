@@ -1,4 +1,4 @@
-/** xj.ripple(点击波纹特效) | V0.3.2 | Apache Licence 2.0 | 2018-2021 © XJ.Chen | https://github.com/xjZone/xj.ripple */
+/** xj.ripple(点击波纹特效) | V0.4.0 | Apache Licence 2.0 | 2018-2022 © XJ.Chen | https://github.com/xjZone/xj.ripple/ */
 
 /* 用于获取偏移位置的临时节点，其他计算点击位置距离容器左上角的方法，都很难兼顾到左侧的滚动条 */
 /* 所以在被点击的容器左上角生成临时节点，然后通过这个节点的 DOMRect.left / top 配合点击处计算 */
@@ -25,13 +25,11 @@
 .xj-ripple-exist .xj-ripple-out{position:relative;overflow:visible;}
 .xj-ripple-exist .xj-ripple-out-mid{position:relative;overflow:visible;}
 
-/* 设置在波纹元素标签上的类名，1px * 1px 的设置，具体尺寸使用 box-shadow 生成，可以避免滚动条 */
-/* 背景色和阴影色都设置为 currentColor，这样颜色就会自动跟随所有容器的 color 设置，无需再设置 */
+/* 设置在波纹标签上的类名，从 V0.4.0 开始不再使用 box-shadow 生成波纹，因为在 Chrome 中有 BUG */
+/* 背景颜色设置为 currentColor，这样颜色就会自动跟随所在容器的 color 设置，无需另外再进行定义 */
 .xj-ripple-exist .xj-ripple-element{
 	position:absolute;
 	z-index:4000;
-	width:1px;
-	height:1px;
 	border-radius:50%;
 	background-color:currentColor;
 	color:inherit;
@@ -55,7 +53,7 @@
 
 /* 确保 disabled 下不显示 ripple 波纹 */
 /* 不行的，当父元素设置了 xj-ripple-disabled 类名 */
-/* 但子元素设置 forbid = false 时就该响应，这句会导致不能显示的 */
+/* 但子元素设置 forbid : false 时就该响应，这句会导致不能显示的 */
 /* .xj-ripple-exist .xj-ripple-disabled .xj-ripple-element{display:none!important;} */
 
 

@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>demo_02_setAnimate</title>
+</head>
+<body>
+
+
+
+<script>
+// 在引入插件前进行参数预设，[] 括号里的值得和插件版本相同
+// transitionDuration 参数用于控制动画时长，默认为 '500ms'
+// transitionTimingFunction 用于设置缓动，默认为'ease-out'
+if(window.xj === undefined){ xj = {} };
+if(xj.rippleOption === undefined){ xj.rippleOption = {} };
+xj.rippleOption['0.4.0'] = { transitionDuration:'250ms', transitionTimingFunction:'linear', };
+</script>
+<script>document.write('<link rel="stylesheet" href="../dist/xj.ripple.css?timeStamp='+ Date.now() +'" />')</script>
+<script>document.write('<script src="../dist/xj.ripple.js?timeStamp='+ Date.now() +'"><\/script>')</script>
+
+<style>.box{display:inline-block;padding:4px;font-family:Menlo, Consolas, Monospace;
+vertical-align:top;border:1px solid #cccccc;min-width:96px;min-height:96px;}</style>
+
+<span class="box xj-ripple" xj-ripple="{debug:true}">click<br />this<br />box</span>
+
+
+
+</body>
+</html>
+
+
