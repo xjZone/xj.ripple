@@ -78,6 +78,7 @@ jqi_win.on('scroll hashchange', function(){
 var jqi_h2s = $('#pub_main').find('h2');
 jqi_h2s.each(function(){ this.id = 
 this.textContent.replace(/\s/g, '_') });
+
 // jqi_h2s.each(function(index, value){
 // 	index = index + 1;
 // 	if(index < 10){ index = '0' + index };
@@ -109,6 +110,13 @@ jqi_xjDir01_ul01.find('li > a').on('click', function(e){
 	var id = this.getAttribute('href').slice(1);
 	$('[id="'+ id +'"]').xjArrive([0,-80], 250);
 	location.hash = id;
+});
+
+// 点击 xjDir 最顶部的标题，会清空 hash 回到顶部
+// 用 pushState 因为 location.hash = '' 会残留 #
+$('#xjDir01_back_start_point').click(function(){
+	history.pushState({state : ''}, '', location.pathname);
+	$(document.scrollingElement).stop().animate({scrollTop:0}, 250);
 });
 
 

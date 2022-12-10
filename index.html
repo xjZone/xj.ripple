@@ -13,9 +13,9 @@
 <script src="https://cdn.jsdelivr.net/gh/xjZone/xj.operate@0.6.0/dist/xj.operate.min.js"></script>
 
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net
-/gh/xjZone/xj.ripple@0.4.0/dist/xj.ripple.min.css" /> -->
+/gh/xjZone/xj.ripple@0.5.0/dist/xj.ripple.min.css" /> -->
 <!-- <script src="https://cdn.jsdelivr.net/gh/xjZone/
-xj.ripple@0.4.0/dist/xj.ripple.min.js"></script> -->
+xj.ripple@0.5.0/dist/xj.ripple.min.js"></script> -->
 <link rel="stylesheet" href="./dist/xj.ripple.min.css" />
 <script src="./dist/xj.ripple.min.js"></script>
 
@@ -68,22 +68,22 @@ xj.ripple@0.4.0/dist/xj.ripple.min.js"></script> -->
 				<div class="xjDir" id="xjDir01" xjDir="{}" style="padding:8px;width:100%;border-right:none;font-family:inherit;">
 					<ul>
 						<li class="xjDir-spread xjDir-active">
-							<a href="javascript:void(0)">
+							<a href="javascript:void(0)" id="xjDir01_back_start_point">
 								<i class="xjDir-icon fas fa-circle-dot"></i>
 								<i class="xjDir-text">xj.ripple</i>
-								<i class="xjDir-sign"></i>
 							</a>
+							<a href="javascript:void(0)"><i class="xjDir-sign"></i></a>
 							<ul id="xjDir01_ul01"></ul>
 						</li>
 						
 						<li class="xjDir-divide"></li>
 						
 						<li class="xjDir-spread">
-							<a href="javascript:void(0)">
+							<a target="_blank" href="https://github.com/xjZone">
 								<i class="xjDir-icon fas fa-cubes"></i>
 								<i class="xjDir-text">xjZone</i>
-								<i class="xjDir-sign"></i>
 							</a>
+							<a href="javascript:void(0)"><i class="xjDir-sign"></i></a>
 							<ul id="xjDir01_ul02"></ul>
 						</li>
 					</ul>
@@ -130,7 +130,7 @@ xj.ripple@0.4.0/dist/xj.ripple.min.js"></script> -->
 
 <p><b>协议</b> : <a target="_blank" href="https://www.apache.org/licenses/LICENSE-2.0">Apache License, V2.0</a></p>
 
-<p><b>版本</b> : <select class="select-unset"><option selected="selected">0.4.0</option></select></p>
+<p><b>版本</b> : <select class="select-unset"><option selected="selected">0.5.0</option></select></p>
 
 <hr />
 </section>
@@ -142,8 +142,8 @@ xj.ripple@0.4.0/dist/xj.ripple.min.js"></script> -->
 <p>首先是引入相关的文件，推荐使用带 <a target="_blank" href="https://www.cnblogs.com/ziyunfei/p/5642796.html" class="">immutable</a> 的 <a target="_blank" href="https://www.jsdelivr.com/">JSDelivr</a> CDN：</p>
 
 <textarea class="xjDemo" xjDemo="{onlySource:true}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.4.0/dist/xj.ripple.min.css" />
-<script src="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.4.0/dist/xj.ripple.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.5.0/dist/xj.ripple.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.5.0/dist/xj.ripple.min.js"></script>
 </textarea>
 
 <hr />
@@ -184,7 +184,7 @@ padding:4px;border:1px solid #ccc;vertical-align:top;}</style>
 
 <section>
 <h2>参数设置</h2>
-<p>插件提供了非常丰富的参数，用于定义波纹的各种细节，无论是圆角或颜色，亦或是尺寸或定位，皆可自由掌控，而这些参数都可通过使用目标容器上的 <code>xj-ripple="{}"</code> 这个内联属性来完成设置，下面是一个简单的例子，使用 <code>radius</code> 参数可修改波纹圆角(默认值是 <code>50%</code>)，使用 <code>color</code> 参数可修改波纹颜色(默认值是 <code>currentColor</code>)，如果你想了解更多的参数，可查阅文档后面的 <a href="#参数列表"><i class="fas fa-section"></i> 参数列表</a>。</p>
+<p>插件提供了非常丰富的参数，用于定义波纹的各种细节，无论是圆角或颜色，亦或是尺寸或定位，皆可自由掌控，而这些参数都可通过使用目标容器上的 <code>xj-ripple="{}"</code> 这个内联属性来完成设置，下面是一个简单的例子，使用 <code>radius</code> 参数可修改波纹圆角(默认值是 <code>50%</code>)，使用 <code>color</code> 参数可修改波纹颜色(默认值是 <code>currentColor</code>)，如果你想了解更多的参数，可查阅文档后面的 <a href="#参数列表"># 参数列表</a>。</p>
 
 <textarea class="xjDemo" xjDemo="{}">
 <span class="box xj-ripple" xj-ripple="{radius:'25%', }">radius</span>
@@ -198,7 +198,7 @@ padding:4px;border:1px solid #ccc;vertical-align:top;}</style>
 
 <section>
 <h2>测试状态</h2>
-<p>默认情况下，当波纹的 <code>opacity</code> 动画执行完毕，波纹节点就会被自动移除掉，这样可以节约浏览器资源，但立即移除节点也导致了我们很难在 DevTool 面板中检查并调试它，所以插件提供了 <code>debug</code> 参数，当这个参数被设为 <code>true</code> 时，波纹就不会被自动移除了，伴随波纹节点的还有节点 <code>xj-ripple-temporary</code>，它用于确定点击位置和容器左上角的距离，更多细节可查阅后面的 <a href="#项目备注"><i class="fas fa-section"></i> 项目备注 - 02</a>。</p>
+<p>默认情况下，当波纹的 <code>opacity</code> 动画执行完毕，波纹节点就会被自动移除掉，这样可以节约浏览器资源，但立即移除节点也导致了我们很难在 DevTool 面板中检查并调试它，所以插件提供了 <code>debug</code> 参数，当这个参数被设为 <code>true</code> 时，波纹就不会被自动移除了，伴随波纹节点的还有节点 <code>xj-ripple-temporary</code>，它用于确定点击位置和容器左上角的距离，更多细节可查阅后面的 <a href="#项目备注"># 项目备注 - 02</a>。</p>
 
 <textarea class="xjDemo" xjDemo="{}">
 <span class="box xj-ripple" xj-ripple="{debug:true, radius:'25%', color:'#39f', }">debug</span>
@@ -372,10 +372,10 @@ backgroundPosition:'center', backgroundSize:'cover', backgroundRepeat:'no-repeat
 // 将 button 追加到分组选择器中，button 就能自动响应波纹了
 if(window.xj === undefined){ xj = {} };
 if(xj.rippleConfig === undefined){ xj.rippleConfig = {} };
-xj.rippleConfig['0.4.0'] = { defaultSelector : '.xj-ripple, .xj-ripple-out, button', };
+xj.rippleConfig['0.5.0'] = { defaultSelector : '.xj-ripple, .xj-ripple-out, button', };
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.4.0/dist/xj.ripple.min.css" />
-<script src="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.4.0/dist/xj.ripple.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.5.0/dist/xj.ripple.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.5.0/dist/xj.ripple.min.js"></script>
 
 <style>button{position:relative;overflow:hidden;}</style>
 <button type="button">button</button>
@@ -397,10 +397,10 @@ xj.rippleConfig['0.4.0'] = { defaultSelector : '.xj-ripple, .xj-ripple-out, butt
 // transitionTimingFunction 用于设置缓动，默认为'ease-out'
 if(window.xj === undefined){ xj = {} };
 if(xj.rippleOption === undefined){ xj.rippleOption = {} };
-xj.rippleOption['0.4.0'] = { transitionDuration:'250ms', transitionTimingFunction:'linear', };
+xj.rippleOption['0.5.0'] = { transitionDuration:'250ms', transitionTimingFunction:'linear', };
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.4.0/dist/xj.ripple.min.css" />
-<script src="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.4.0/dist/xj.ripple.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.5.0/dist/xj.ripple.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.5.0/dist/xj.ripple.min.js"></script>
 
 <style>.box{display:inline-block;padding:4px;font-family:Menlo, Consolas, Monospace;
 vertical-align:top;border:1px solid #cccccc;min-width:96px;min-height:96px;}</style>
@@ -462,14 +462,14 @@ background:radial-gradient(circle farthest-corner at 0% 0%, #daf 5%, #adf
 
 <section>
 <h2>xj.ripple 对象</h2>
-<p>全局中的 <code>xj.ripple</code> 对象上只有一个属性和一个方法，<code>xj.ripple.version</code> 属性会返回当前插件的版本，<code>xj.ripple.create()</code> 方法则是用于手动创建波纹，该方法接受两个参数，第一个参数是生成波纹的容器(必填)，第二个参数是设置波纹的参数对象(可选)，下面是一个使用该方法的例子，点击左侧容器可在右侧容器中生成一个波纹，当方法的参数与容器的参数重复时，容器的参数优先级会更高。</p>
+<p>全局中的 <code>xj.ripple</code> 对象上只有一个属性和一个方法，<code>xj.ripple.version</code> 属性会返回当前插件的版本，<code>xj.ripple.create()</code> 方法则是用于手动创建波纹，该方法接受两个参数，第一个参数是生成波纹的容器(必填)，第二个参数是设置波纹的参数对象(可选)，下面是一个使用该方法的例子，点击左侧容器可在右侧容器中生成一个波纹，当方法的参数与容器的参数重复时，方法的参数优先级会更高。</p>
 
 <textarea class="xjDemo" xjDemo="{}">
 <span id="button01" class="box">点击这里<br />会在右侧<br />创建波纹</span>
 <span id="result01" class="box" style="position:relative;overflow:hidden;"></span>
 
 <span id="button02" class="box">点击这里<br />会在右侧<br />创建波纹</span>
-<span id="result02" class="box" style="position:relative;overflow:hidden;" xj-ripple="{color:'orange'}"></span>
+<span id="result02" class="box" style="position:relative;overflow:hidden;" xj-ripple="{color:'#39f'}"></span>
 
 <script>
 // 只设置了目标容器，没传递参数的情况
@@ -477,10 +477,10 @@ var result01 = document.getElementById('result01');
 document.getElementById('button01').onclick = 
 function(){ xj.ripple.create(result01) };
 
-// color 参数被容器上设置的参数覆盖了
+// 容器上设置的参数被函数参数被覆盖了
 var result02 = document.getElementById('result02');
 document.getElementById('button02').onclick = function(){ 
-xj.ripple.create(result02, {radius: '25%', color: '#39f', }) };
+xj.ripple.create(result02, {radius:'25%', color:'orange', }) };
 </script>
 </textarea>
 
@@ -491,14 +491,14 @@ xj.ripple.create(result02, {radius: '25%', color: '#39f', }) };
 
 <section>
 <h2>配置列表</h2>
-<p>以下 Demo 罗列了本插件所有可用的配置，并且展示了插件进行全局配置的具体操作方法，需要注意的是，全局配置得在引入插件之前就设置好，否则插件加载并执行的时候找不到配置，就会认为配置不存在，并且版本号也要对得上，否则插件也是不理会的，例如本页面使用的插件是 <code>0.4.0</code> 的版本，在 <code>xj.rippleConfig</code> 对象后面跟着的就是 <code>['0.4.0']</code>，版本匹配是考虑到插件多版本并存而设计的。</p>
+<p>以下 Demo 罗列了本插件所有可用的配置，并且展示了插件进行全局配置的具体操作方法，需要注意的是，全局配置得在引入插件之前就设置好，否则插件加载并执行的时候找不到配置，就会认为配置不存在，并且版本号也要对得上，否则插件也是不理会的，例如本页面使用的插件是 <code>0.5.0</code> 的版本，在 <code>xj.rippleConfig</code> 对象后面跟着的就是 <code>['0.5.0']</code>，版本匹配是考虑到插件多版本并存而设计的。</p>
 
 <textarea class="xjDemo" xjDemo="{result:false, larger:true}">
 <script>
 // 中括号里的是版本号
 if(window.xj === undefined){ xj = {} };
 if(xj.rippleConfig === undefined){ xj.rippleConfig = {} };
-xj.rippleConfig['0.4.0'] = {
+xj.rippleConfig['0.5.0'] = {
 	
 	// 要添加 existClass 类名参数的目标节点，默认是 document.documentElement，也就是 html 标签，不选用 body 标签，是因为初始化时 body 可能还未被加载，不推荐修改
 	classTarget : document.documentElement,
@@ -532,14 +532,14 @@ xj.rippleConfig['0.4.0'] = {
 
 <section>
 <h2>参数列表</h2>
-<p>以下 Demo 罗列了本插件所有可用的参数，并且展示了插件进行参数预设的具体操作方法，需要注意的是，参数预设得在引入插件之前就设置好，否则插件加载并执行的时候找不到预设，就会认为预设不存在，并且版本号也要对得上，否则插件也是不理会的，例如本页面使用的插件是 <code>0.4.0</code> 的版本，在 <code>xj.rippleOption</code> 对象后面跟着的就是 <code>['0.4.0']</code>，版本匹配是考虑到插件多版本并存而设计的。</p>
+<p>以下 Demo 罗列了本插件所有可用的参数，并且展示了插件进行参数预设的具体操作方法，需要注意的是，参数预设得在引入插件之前就设置好，否则插件加载并执行的时候找不到预设，就会认为预设不存在，并且版本号也要对得上，否则插件也是不理会的，例如本页面使用的插件是 <code>0.5.0</code> 的版本，在 <code>xj.rippleOption</code> 对象后面跟着的就是 <code>['0.5.0']</code>，版本匹配是考虑到插件多版本并存而设计的。</p>
 
 <textarea class="xjDemo" xjDemo="{result:false, larger:true}">
 <script>
 // 中括号里的是版本号
 if(window.xj === undefined){ xj = {} };
 if(xj.rippleOption === undefined){ xj.rippleOption = {} };
-xj.rippleOption['0.4.0'] = {
+xj.rippleOption['0.5.0'] = {
 	
 	debug : false,              // 进入调试模式，默认是 false，设置为 true 则触发 mouseup 或 touchend 事件之后，不会自动删除插件生成的节点，这样方便进行开发调试
 	append : true,              // 波纹追加模式，默认是 true，波纹标签将会被写入到目标容器里的最后面，如果设置改为 false，波纹标签将会被写入到目标容器里的最前面

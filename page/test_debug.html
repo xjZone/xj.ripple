@@ -13,8 +13,8 @@
 <script src="https://cdn.jsdelivr.net/gh/xjZone/xj.operate@0.6.0/dist/xj.operate.min.js"></script>
 
 <!--◇
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.4.0/dist/xj.ripple.min.css" />
-<script src="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.4.0/dist/xj.ripple.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.5.0/dist/xj.ripple.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.5.0/dist/xj.ripple.min.js"></script>
 ◇-->
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xjZone/xj.focus@0.3.2/dist/xj.focus.min.css" />
@@ -583,16 +583,16 @@ html:not(.xj-operate-touch) .button-white:hover  {border-color:#bbb;background-c
 onclick="$('html').toggleClass('xj-base-black')"><i class="fa fa-lightbulb"></i></button></section> -->
 
 <script>
-// 可在引入插件之前，通过 xj.rippleConfig['0.4.0'] 对 xj.ripple 进行全局的配置，注意版本号要相同
-// 可在引入插件之前，通过 xj.rippleOption['0.4.0']，对波纹的样式细节等进行预设，注意版本号要相同
+// 可在引入插件之前，通过 xj.rippleConfig['0.5.0'] 对 xj.ripple 进行全局的配置，注意版本号要相同
+// 可在引入插件之前，通过 xj.rippleOption['0.5.0']，对波纹的样式细节等进行预设，注意版本号要相同
 
 // if(window.xj === undefined){ xj = {} };
 // if(xj.rippleConfig === undefined){ xj.rippleConfig = {} };
-// xj.rippleConfig['0.4.0'] = { preventSelector : 'img, area, input, textarea, select, audio, video, track, map', };
+// xj.rippleConfig['0.5.0'] = { preventSelector : 'img, area, input, textarea, select, audio, video, track, map', };
 
 // if(window.xj === undefined){ xj = {} };
 // if(xj.rippleOption === undefined){ xj.rippleOption = {} };
-// xj.rippleOption['0.4.0'] = { debug : true, append : false, mouse : [0,1,2], nodeName : 'xj-ripple-custom', classString : '', styleObject : null, };
+// xj.rippleOption['0.5.0'] = { debug : true, append : false, mouse : [0,1,2], nodeName : 'xj-ripple-custom', classString : '', styleObject : null, };
 </script>
 
 <script>document.write('<link rel="stylesheet" href="../dist/xj.ripple.css?timeStamp='+ Date.now() +'" />')</script>
@@ -606,7 +606,7 @@ console.log(xj.ripple);
 // 以这种方式创建出来的波纹，默认圆心位置是目标节点的中心点，目标节点得不是 position:static 才行
 
 // {
-// 	version : '0.4.0',							// 当前插件和配置的版本号
+// 	version : '0.5.0',							// 当前插件和配置的版本号
 // 	create : function(target, options){},		// 传入节点和参数生成波纹
 // }
 

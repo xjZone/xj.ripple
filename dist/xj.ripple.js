@@ -1,4 +1,4 @@
-/** xj.ripple(点击波纹特效) | V0.4.0 | Apache Licence 2.0 | 2018-2022 © XJ.Chen | https://github.com/xjZone/xj.ripple/ */
+/** xj.ripple(点击波纹特效) | V0.5.0 | Apache Licence 2.0 | 2018-2022 © XJ.Chen | https://github.com/xjZone/xj.ripple/ */
 ;(function(global, factory){
 	if(typeof(define) === 'function' && (define.amd !== undefined || define.cmd !== undefined)){ define(factory) }
 	else if(typeof(module) !== 'undefined' && typeof(exports) === 'object'){ module.exports = factory() }
@@ -14,39 +14,39 @@
 
 
 // ---------------------------------------------------------------------------------------------
-// globalThis | window | self | global
+// globalThis, window, self, global
 var pub_global = (typeof(globalThis) !== 'undefined') ? globalThis : (typeof(window) !== 'undefined') ? window : (typeof(self) !== 'undefined') ? self : global;
 
 // public nothing, version, keyword
-var pub_nothing = function(){}, pub_version = '0.4.0', pub_keyword = 'ripple';
+var pub_nothing = function(){}, pub_version = '0.5.0', pub_keyword = 'ripple';
 
-// public config, advance set
+// public config
 var pub_config = {
 	
-	// 要添加 existClass 类名参数的目标节点，默认是 document.documentElement，也就是 html 标签，不选用 body 标签，是因为初始化时 body 可能还未被加载，不推荐修改
+	// 将被添加 existClass 配置的目标节点，默认是 document.documentElement，也就是 html 标签，不选用 body 标签是因为初始化时 body 标签可能还未被加载，不推荐修改
 	classTarget : document.documentElement,
 	
-	// 初始化 classTarget 节点参数将会被添加的类名，默认是 'xj-ripple-exist'，这个可用于在样式中判断是否存在 xj.ripple 插件，XJ 系列插件只响应该参数，不推荐修改
+	// 初始化后 classTarget 配置会被添加的类名，默认是 'xj-ripple-exist'，这个类名可用于在样式中判断是否存在 xj.ripple 插件，XJ 系列插件只响应该配置，不推荐修改
 	existClass : 'xj-ripple-exist',
 	
-	// 在引入插件后，页面中的任意元素节点被点击时，只要符合下面这个参数中的任意一个选择器，那么在点击的时候就会响应波纹效果，默认是 '.xj-ripple, .xj-ripple-out'
+	// 在引入插件后，页面中的任意元素节点被点击时，只要符合下面这个配置中的任意一个选择器，那么在点击的时候就会响应波纹效果，默认是 '.xj-ripple, .xj-ripple-out'
 	// .xj-ripple 类名与 .xj-ripple-out 类名，它们的区别在于，前者所产生的波纹不会溢出，后者所产生的波纹会溢出，一般来说溢出只是用于测试，正式环境中很少会用到的
 	// 如果你希望某些元素如 button 初始就自带这种波纹效果，可将 'button' 这个选择器添加到这个分组选择器中，这样就无需手动为每个 button 都设置 xj-ripple 的类名了
 	// 当然你还是得先为 button 标签设置 position:relative; 或 position:absolute; 的样式，否则 button 中的波纹就无法正常定位，而 overflow:hidden 设置则不是必须的
 	defaultSelector : '.xj-ripple, .xj-ripple-out',
 	
-	// 下面的这个 specialSelector 参数和上面的那个 defaultSelector 参数类似，只是点击所产生的波纹将会被水平垂直居中，默认是 '.xj-ripple-mid, .xj-ripple-out-mid'
+	// 下面的这个 specialSelector 配置和上面的那个 defaultSelector 配置类似，只是点击所产生的波纹将会被水平垂直居中，默认是 '.xj-ripple-mid, .xj-ripple-out-mid'
 	// '.xj-ripple-mid' 类名与 '.xj-ripple-out-mid' 类名，它们的区别在于，前者的波纹不会溢出，后者的波纹将会溢出，其实就是样式有没有设置 overflow:hidden; 的区别
-	// 如果你希望某些元素如 button 初始就自带这种波纹效果，可将选择器以分组选择器的形式追加到参数中，注意该元素不能是 position:static;，否则波纹将无法准确的定位
+	// 如果你希望某些元素如 button 初始就自带这种波纹效果，可将选择器以分组选择器的形式追加到配置中，注意该元素不能是 position:static;，否则波纹将无法准确的定位
 	specialSelector : '.xj-ripple-mid, .xj-ripple-out-mid',
 	
-	// 符合下面这个 preventSelector 参数的标签节点，即使添加了相关的类名也不会响应 ripple，默认是 'img, area, input, textarea, select, audio, video, track, map'
+	// 符合下面这个 preventSelector 配置的标签节点，即使添加了相关的类名也不会响应 ripple，默认是 'img, area, input, textarea, select, audio, video, track, map'
 	// 单标签的 img, area, input 无法插入子标签，特殊元素的 textarea, select, audio, video, track, map 无法插入普通的元素节点作为子标签，ripple 无法在它们中显示
 	preventSelector : 'img, area, input, textarea, select, audio, video, track, map',
 	
 };
 
-// public option(32 items)
+// public option
 var pub_option = {
 	
 	debug : false,				// 进入调试模式，默认是 false，设置为 true 则触发 mouseup 或 touchend 事件之后，不会自动删除插件生成的节点，这样方便进行开发调试
@@ -113,7 +113,7 @@ if(pub_global.xj.rippleReturn[pub_version] !== undefined){ return pub_global.xj.
 
 
 
-// 创建并合并 config 和 option 参数
+// 创建并合并 config 和 option 对象
 if(pub_global.xj.rippleConfig === undefined){ pub_global.xj.rippleConfig = {} };
 if(pub_global.xj.rippleOption === undefined){ pub_global.xj.rippleOption = {} };
 if(pub_global.xj.rippleConfig[pub_version] !== undefined){ Object.keys(pub_global.xj.rippleConfig[pub_version]).forEach(function(key){ pub_config[key] = pub_global.xj.rippleConfig[pub_version][key] }) };
@@ -149,7 +149,7 @@ var createRipple = function(event, target, special, options){
 	
 	
 	// 每个波纹都要需要重新生成配置，因为它们都是独立的，不能修改 pub_option，否则会相互影响到的
-	// 将 pub_option | options | inlineOption 三个对象都推入 optionList 数组中，最后遍历合并对象
+	// 将 pub_option | inlineOption | options 三个对象都推入 optionList 数组中，最后遍历合并对象
 	var option = {};								// 最终的参数对象
 	var optionList = [];							// 承载参数的数组
 	
@@ -209,13 +209,13 @@ var createRipple = function(event, target, special, options){
 		
 	};
 	
-	// 使用 unshift 方法将 options & pub_option 对象参数推入到 optionList 前端，因为它们权重最低
+	// options 参数推到最后面去，因为它优先级最高，pub_option 参数推到最前面去，因为它优先级最低
 	// 遍历数组 optionList，将数组中的对象合并到 option 对象中，之后创建波纹就用 option 进行操作
-	if(options){ optionList.unshift(options) };
+	if(options !== null && options !== undefined){ optionList.push(options) };
 	optionList.unshift(pub_option);
 	optionList
-	.forEach(function(obj){
-		Object.keys(obj).forEach(function(key){ option[key] = obj[key] });
+	.forEach(function(param){
+		Object.keys(param).forEach(function(key){ option[key] = param[key] });
 	});
 	
 	
