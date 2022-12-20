@@ -32,8 +32,8 @@ xj.rippleOption['0.5.0'] = {};
 // xj.focus
 if(!xj.focusConfig){ xj.focusConfig = {} };
 if(!xj.focusOption){ xj.focusOption = {} };
-xj.focusConfig['0.3.2'] = { frameStyle : 'shadow', };
-xj.focusOption['0.3.2'] = {};
+xj.focusConfig['0.4.0'] = {};
+xj.focusOption['0.4.0'] = {};
 
 // xj.base
 if(!xj.baseConfig){ xj.baseConfig = {} };
@@ -53,7 +53,7 @@ if(!xj.Demo){ xj.Demo = {} };
 if(!xj.Demo.config){ xj.Demo.config = {} };
 if(!xj.Demo.option){ xj.Demo.option = {} };
 xj.Demo.config['0.1.0'] = {};
-xj.Demo.option['0.1.0'] = { tab2space : (/MSIE|Trident|EDGE/i.test(navigator.userAgent) === true ? 4 : 0), };
+xj.Demo.option['0.1.0'] = { tab2space : (/MSIE|Trident|EDGE/i.test(navigator.userAgent) === true ? 4:0), };
 
 // xjScroll
 if(!xj.Scroll){ xj.Scroll = {} };

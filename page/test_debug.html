@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="renderer" content="webkit" />
 <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
-<script src="../static/cj/xj.plugins.setting.js?ver=2022-11-12T23:04:08UTC+8"></script>
+<script src="../static/cj/xj.plugins.setting.js?ver=2022-12-16T05:16:20UTC+8"></script>
 
 <meta name="viewport" xj-viewport="{minWidth:400, }" content="width=device-width,initial-scale=1" />
 <script src="https://cdn.jsdelivr.net/gh/xjZone/xj.viewport@0.3.2/dist/xj.viewport.min.js"></script>
@@ -17,8 +17,8 @@
 <script src="https://cdn.jsdelivr.net/gh/xjZone/xj.ripple@0.5.0/dist/xj.ripple.min.js"></script>
 ◇-->
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xjZone/xj.focus@0.3.2/dist/xj.focus.min.css" />
-<script src="https://cdn.jsdelivr.net/gh/xjZone/xj.focus@0.3.2/dist/xj.focus.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/xjZone/xj.focus@0.4.0/dist/xj.focus.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/xjZone/xj.focus@0.4.0/dist/xj.focus.min.js"></script>
 
 <!--◇
 <style>html[class~="xj-base-black"] body{background-color:#333333;color:#ffffff;}</style>
@@ -51,10 +51,11 @@
 
 <style>
 @font-face{font-family:"Iosevka";src:local('Iosevka'), url("../static/font/iosevka/6.1.2/iosevka-fixed-regular.woff2") format("woff2"), url("../static/font/iosevka/6.1.2/iosevka-fixed-regular.woff") format("woff");}
-a{background-color:transparent;text-decoration:none;cursor:pointer;color:#39f;} html:not(.xj-operate-touch) a:hover{text-decoration:underline;color:#4af;}
-body{box-sizing:border-box;margin:0;padding:0 32px;max-width:1024px;font:16px/1.5 Iosevka,'Microsoft YaHei','Hiragino Sans GB';}
-code{padding:0 8px;background-color:#f0f0f0;color:#f39;font-family:inherit;}
-a > code{color:inherit;}
+body{box-sizing:border-box;margin:0;padding:0 32px;max-width:1024px;word-break:break-all;font:16px/1.5 Iosevka, 'Hiragino Sans GB', 'Microsoft YaHei';}
+code{padding:0 8px;background-color:#f0f0f0;color:#f39;font-family:inherit;} a > code{color:inherit;}
+a{background-color:transparent;color:#39f;text-decoration:none;cursor:pointer;}
+html:not(.xj-operate-touch) a:hover{color:#4af;text-decoration:underline;}
+input,textarea, button,select{font-size:inherit;font-family:inherit;}
 </style>
 <title>xj.ripple_debug</title>
 </head>
@@ -604,7 +605,6 @@ console.log(xj.ripple);
 
 // create() 方法的两个参数分别是 target, options，前者为波纹所在元素节点，后者为波纹参数设置对象
 // 以这种方式创建出来的波纹，默认圆心位置是目标节点的中心点，目标节点得不是 position:static 才行
-
 // {
 // 	version : '0.5.0',							// 当前插件和配置的版本号
 // 	create : function(target, options){},		// 传入节点和参数生成波纹

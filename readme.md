@@ -9,7 +9,7 @@
 
 **文档** : <https://xjZone.github.io/xj.ripple/>  
 
-**协议** : [Apache-2.0 License](https://github.com/xjZone/xj.ripple/blob/master/LICENSE)  
+**协议** : [Apache License 2.0](https://github.com/xjZone/xj.ripple/blob/master/LICENSE)  
 
 ————
 
